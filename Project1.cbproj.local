@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2026/05/21 14:14:57.000.259,=C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2026/05/21 14:14:57.000.986,=C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2026/05/26 16:41:42.000.741,=C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>2026/05/26 16:41:42.000.589,=C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>2026/05/26 16:44:30.000.030,C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\Unit1.dfm</Transaction>
+    <Transaction>2026/05/26 16:44:30.000.030,C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Unit1.cpp=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\Unit1.cpp</Transaction>
+    <Transaction>2026/05/26 16:44:30.000.030,C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Unit1.h=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\Unit1.h</Transaction>
+    <Transaction>2026/05/26 16:44:55.000.265,=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\ciudad.cpp</Transaction>
+    <Transaction>2026/05/26 16:44:55.000.330,=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\grafo.cpp</Transaction>
+    <Transaction>2026/05/26 16:44:55.000.402,=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\ruta.cpp</Transaction>
+    <Transaction>2026/05/26 17:04:04.000.987,C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Project1PCH1.h=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\Project1PCH1.h</Transaction>
+    <Transaction>2026/05/26 17:04:05.000.033,C:\Users\VICTUS\Documents\Embarcadero\Studio\Projects\Project1.cbproj=C:\Users\VICTUS\Documents\MATERIAS DE LA CARRERA\grafos\vcl\Project1.cbproj</Transaction>
+  </Transactions>
+</BorlandProject>
