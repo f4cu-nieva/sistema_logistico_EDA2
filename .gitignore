@@ -1,0 +1,14 @@
+*.obj
+*.exe
+*.tds
+*.map
+*.ilc
+*.ild
+*.ilf
+*.ils
+*.pdi
+*.pch
+__history/
+Win32/Debug/*.exe
+chubut.dat
+historial.txt
