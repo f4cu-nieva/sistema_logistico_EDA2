@@ -5,25 +5,28 @@
 using namespace std;
 
 class ruta {
-    private:
-        int id_origen;
-        int id_destino;
-        float distancia;
-        string descripcion;
-        bool  activa;
+	private:
+		int id_origen;
+		int id_destino;
+		float distancia;
+		string descripcion;
+		bool  activa;
 
-    public:
+	public:
         ruta(int id_origen, int id_destino, float distancia, string descripcion);//constructor
-        ~ruta();//destructor
+		~ruta();//destructor
 
-        int get_Origen()const;
-        int get_Destino()const;
-        float  get_Distancia()const;   // qué tipo devuelve?
-        string get_Descripcion()const;
-        bool is_Activa()const;   // qué tipo devuelve?
+		int get_Origen();
+		int get_Destino();
+		float  get_Distancia();
+		string get_Descripcion();
+		bool is_Activa();
 
-        void set_Activa(bool b);   // qué tipo recibe?
-        string info()const;
+		void set_Origen(int o);
+		void set_Destino(int d);
+
+		void set_Activa(bool b);
+		string info();//devuelve info de la ruta
 };
 
 #endif
