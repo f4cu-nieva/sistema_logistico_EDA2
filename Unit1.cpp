@@ -41,7 +41,7 @@ void TForm1::escribirHistorial(string operacion) {
 }
 
 //---------------------------------------------------------------------------
-bool TForm1::esAr staCamino(int a, int b) {
+bool TForm1::esArístaCamino(int a, int b) {
 	if (!mostrarCamino) return false;
 	for (int i = 0; i < longitudCamino - 1; i++) {
 		if ((caminoOptimo[i] == a && caminoOptimo[i+1] == b) ||
@@ -114,7 +114,7 @@ void TForm1::dibujarMapa() {
 		for (int i = 0; i < g.getCantRutas(); i++) {
 			ruta* r = g.getRuta(i);
 			if (r == NULL) continue;
-			if (!esAr staCamino(r->get_Origen(), r->get_Destino())) continue;
+			if (!esArístaCamino(r->get_Origen(), r->get_Destino())) continue;
 			ciudad* co = g.getCiudad(r->get_Origen());
 			ciudad* cd = g.getCiudad(r->get_Destino());
 			if (co == NULL || cd == NULL) continue;
@@ -575,6 +575,4 @@ void __fastcall TForm1::btnBajaCiudadClick(TObject *Sender) {
 	actualizarComboBaja(); actualizarGrids(); dibujarMapa();
 }
 //---------------------------------------------------------------------------
-
-
 
