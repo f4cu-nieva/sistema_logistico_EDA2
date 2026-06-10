@@ -3,16 +3,17 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 814
-  ClientWidth = 670
+  ClientWidth = 1120
   Color = clInactiveCaptionText
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnShow = cboOrigenChange
   TextHeight = 15
   object Label1: TLabel
-    Left = 158
+    Left = 366
     Top = 16
     Width = 333
     Height = 25
@@ -26,8 +27,71 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
+  object imgMapa: TImage
+    Left = 8
+    Top = 134
+    Width = 601
+    Height = 378
+    Center = True
+    Proportional = True
+    Stretch = True
+  end
+  object lblCiudadAgregar: TLabel
+    Left = 520
+    Top = 66
+    Width = 106
+    Height = 17
+    Caption = 'Ciudad a agregar:'
+    Color = clCadetblue
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clSeagreen
+    Font.Height = -13
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 520
+    Top = 108
+    Width = 114
+    Height = 15
+    Caption = 'Ciuadad a dar de baja'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clSeagreen
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label5: TLabel
+    Left = 270
+    Top = 549
+    Width = 80
+    Height = 28
+    Caption = 'Ciudades'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clSeagreen
+    Font.Height = -20
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+  end
+  object Label6: TLabel
+    Left = 825
+    Top = 549
+    Width = 48
+    Height = 28
+    Caption = 'Rutas'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clSeagreen
+    Font.Height = -20
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentFont = False
+  end
   object Label2: TLabel
-    Left = 32
+    Left = 136
     Top = 64
     Width = 55
     Height = 20
@@ -40,7 +104,7 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label3: TLabel
-    Left = 32
+    Left = 133
     Top = 104
     Width = 58
     Height = 20
@@ -52,37 +116,29 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object imgMapa: TImage
-    Left = 33
-    Top = 397
-    Width = 560
-    Height = 276
-    Center = True
-    Proportional = True
-    Stretch = True
-  end
   object cboOrigen: TComboBox
-    Left = 93
+    Left = 197
     Top = 65
-    Width = 500
+    Width = 289
     Height = 23
     Color = clWhitesmoke
     TabOrder = 0
     Text = 'cboOrigen'
+    OnChange = cboOrigenChange
   end
   object cboDestino: TComboBox
-    Left = 96
+    Left = 197
     Top = 105
-    Width = 497
+    Width = 289
     Height = 23
     TabOrder = 1
     Text = 'cboDestino'
   end
   object memoResultados: TMemo
-    Left = 32
-    Top = 150
-    Width = 561
-    Height = 241
+    Left = 615
+    Top = 134
+    Width = 484
+    Height = 378
     Color = clDarkgreen
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWhite
@@ -97,8 +153,8 @@ object Form1: TForm1
     TabOrder = 2
   end
   object btnCalcular: TButton
-    Left = 15
-    Top = 704
+    Left = 165
+    Top = 518
     Width = 75
     Height = 25
     Caption = 'Calcular Ruta'
@@ -106,8 +162,8 @@ object Form1: TForm1
     OnClick = btnCalcularClick
   end
   object btnCortar: TButton
-    Left = 136
-    Top = 704
+    Left = 275
+    Top = 518
     Width = 75
     Height = 25
     Caption = 'Cortar Ruta'
@@ -115,8 +171,8 @@ object Form1: TForm1
     OnClick = btnCortarClick
   end
   object btnHabilitar: TButton
-    Left = 248
-    Top = 704
+    Left = 387
+    Top = 518
     Width = 75
     Height = 25
     Caption = 'Habilitar Ruta'
@@ -124,8 +180,8 @@ object Form1: TForm1
     OnClick = btnHabilitarClick
   end
   object btnMatriz: TButton
-    Left = 352
-    Top = 704
+    Left = 734
+    Top = 518
     Width = 75
     Height = 25
     Caption = 'Ver Matriz'
@@ -133,8 +189,8 @@ object Form1: TForm1
     OnClick = btnMatrizClick
   end
   object btnGuardar: TButton
-    Left = 456
-    Top = 704
+    Left = 854
+    Top = 518
     Width = 75
     Height = 25
     Caption = 'Guardar'
@@ -142,12 +198,66 @@ object Form1: TForm1
     OnClick = btnGuardarClick
   end
   object btnCargar: TButton
-    Left = 560
-    Top = 704
+    Left = 974
+    Top = 518
     Width = 75
     Height = 25
     Caption = 'Cargar'
     TabOrder = 8
     OnClick = btnCargarClick
+  end
+  object cboAgregar: TComboBox
+    Left = 640
+    Top = 65
+    Width = 289
+    Height = 23
+    Style = csDropDownList
+    TabOrder = 9
+  end
+  object btnAgregarCiudad: TButton
+    Left = 944
+    Top = 64
+    Width = 105
+    Height = 25
+    Caption = 'Agregar Ciudad'
+    TabOrder = 10
+    OnClick = btnAgregarCiudadClick
+  end
+  object btnBajaCiudad: TButton
+    Left = 944
+    Top = 104
+    Width = 75
+    Height = 25
+    Caption = 'Dar de Baja'
+    TabOrder = 11
+    OnClick = btnBajaCiudadClick
+  end
+  object cboBaja: TComboBox
+    Left = 640
+    Top = 105
+    Width = 289
+    Height = 23
+    TabOrder = 12
+    Text = 'cboBaja'
+  end
+  object gridCiudades: TStringGrid
+    Left = 173
+    Top = 583
+    Width = 265
+    Height = 211
+    ColCount = 4
+    FixedCols = 0
+    RowCount = 2
+    TabOrder = 13
+  end
+  object gridRutas: TStringGrid
+    Left = 696
+    Top = 583
+    Width = 294
+    Height = 211
+    ColCount = 4
+    FixedCols = 0
+    RowCount = 2
+    TabOrder = 14
   end
 end
