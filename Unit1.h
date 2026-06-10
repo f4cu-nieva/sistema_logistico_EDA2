@@ -1,4 +1,3 @@
-//---------------------------------------------------------------------------
 #include "grafo.h"
 #include <System.Classes.hpp>
 #include <Vcl.Controls.hpp>
@@ -77,7 +76,7 @@ private:
 	int caminoOptimo[15];   // indices de ciudades del camino
 	int longitudCamino;     // cantidad de ciudades en el camino
 	bool mostrarCamino;
-    bool esAr staCamino(int a, int b);
+    bool esAristaCamino(int a, int b);
 public:
 	__fastcall TForm1(TComponent* Owner);
 };
