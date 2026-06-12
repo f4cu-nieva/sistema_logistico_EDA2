@@ -1,28 +1,34 @@
-#ifndef CIUDAD_H //archivo.h
-#define CIUDAD_H      // evita que se incluya dos veces
+#ifndef CIUDAD_H
+#define CIUDAD_H
+
 #include <string>
 using namespace std;
 
-class ciudad{
-    private:
+// Representa un nodo del grafo: una ciudad con su id, nombre y
+// posicion (x, y) que se usa para dibujarla en el mapa.
+class ciudad {
+private:
+	int    id_ciudad;
+	string nombre;
+	int    x;
+	int    y;
 
-        int id_ciudad;
-        string nombre;
-        int x;
-        int y;
+public:
+	ciudad(int id_ciudad, string nombre, int x, int y);
+	~ciudad();
 
-    public:
+	// Getters (no modifican el objeto -> const)
+	int    get_id()     const;
+	string get_Nombre() const;
+	int    get_X()      const;
+	int    get_Y()      const;
 
-        ciudad(int id_ciudad, string nombre, int x, int y); //constructor
-        ~ciudad();//destructor
-        int get_id();//ingresar el id de ciudad
-        string get_Nombre(); //ingresar el nombre
-        int get_X();//ingresar el eje X
-        int get_Y();//ingresar el eje Y
-        void set_Nombre(string s);//Mostrar el nombre de la ciudad(nodo)
-        void info();
+	void set_Nombre(string s);
 
+	// Devuelve los datos de la ciudad en texto: "[id] ciudad: nombre"
+	string info() const;
 };
+
 #endif
 /*
 .h — la "ficha técnica" — dice qué existe (atributos y funciones declaradas)

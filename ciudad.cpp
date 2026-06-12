@@ -1,45 +1,35 @@
-#include "ciudad.h" //archivo.cpp
+#include "ciudad.h"
 
- #include <iostream>
-
- using namespace std;
-
-ciudad::ciudad(int id_ciudad, string nombre, int x, int y) { //funcion del constructor
-    this->id_ciudad = id_ciudad;
-    this->nombre    = nombre;
-    this->x         = x;
-    this->y         = y;
-}//se ingresan los datos de la ciudad
-
+ciudad::ciudad(int id_ciudad, string nombre, int x, int y) {
+	this->id_ciudad = id_ciudad;
+	this->nombre    = nombre;
+	this->x         = x;
+	this->y         = y;
+}
 
 ciudad::~ciudad() {
 }
 
-int ciudad::get_id(){
+int ciudad::get_id() const {
 	return id_ciudad;
 }
 
-string ciudad::get_Nombre(){
- 	return nombre;
- }
+string ciudad::get_Nombre() const {
+	return nombre;
+}
 
-int ciudad::get_X()
-{
+int ciudad::get_X() const {
 	return x;
 }
 
-int ciudad::get_Y(){
-    return y;
+int ciudad::get_Y() const {
+	return y;
 }
 
-void   ciudad::set_Nombre(string s) {
-nombre = s;
+void ciudad::set_Nombre(string s) {
+	nombre = s;
 }
 
-void ciudad::info(){
-
-    cout<<"[ "<<id_ciudad << "] " << " ciudad: "<< nombre << endl;
-
-    //return "[" + to_string(id_ciudad) + "] " + nombre;
+string ciudad::info() const {
+	return "[" + to_string(id_ciudad) + "] ciudad: " + nombre;
 }
-
