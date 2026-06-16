@@ -10,21 +10,54 @@
 #pragma resource "*.dfm"
 TForm1 *Form1;
 
-struct CiudadExtra { int id; string nombre; int x, y; };
-static CiudadExtra ciudadesExtra[5] = {
-	{ 5, "Rio Mayo",    390, 350 },
-	{ 6, "Sarmiento",  630, 210 },
-	{ 7, "Gaiman",     580,  30 },
-	{ 8, "Camarones",  740, 250 },
-	{ 9, "Lago Puelo",  55,  50 }
+struct CiudadDef { int id; string nombre; int x, y; bool inicial; };
+static CiudadDef ciudadesDef[10] = {
+	{ 0, "Comodoro Rivadavia", 690, 370, true  },
+	{ 1, "Trelew",             380, 200, true  },
+	{ 2, "Rawson",             660, 110, true  },
+	{ 3, "Puerto Madryn",      370,  45, true  },
+	{ 4, "Esquel",              90, 140, true  },
+	{ 5, "Rio Mayo",           390, 350, false },
+	{ 6, "Sarmiento",          630, 200, false },
+	{ 7, "Gaiman",             580,  30, false },
+	{ 8, "Camarones",          740, 250, false },
+	{ 9, "Lago Puelo",          55,  50, false }
 };
 
-struct RutaExtra { int origen, destino; float distancia; string descripcion; };
-static RutaExtra rutasRioMayo[2]   = { {5,0,278,"RN 26"}, {5,4,260,"RN 40"} };
-static RutaExtra rutasSarmiento[2] = { {6,0,148,"RN 26"}, {6,1,290,"RN 25"} };
-static RutaExtra rutasGaiman[2]    = { {7,1,17,"RP 7"},   {7,2,28,"RP 7"}   };
-static RutaExtra rutasCamarones[2] = { {8,2,165,"RP 1"},  {8,0,270,"RP 1"}  };
-static RutaExtra rutasLagoPuelo[1] = { {9,4,70,"RN 40"}                      };
+struct RutaDef { int idA, idB; float distancia; string descripcion; };
+static RutaDef rutasDef[19] = {
+	// Rutas entre ciudades iniciales (0-4)
+	{ 0, 1, 376,  "RN 3" },
+	{ 1, 2, 22,   "RP 7" },
+	{ 1, 3, 64.8, "RN 3" },
+	{ 3, 4, 665,  "RN 3 + RN 25 + RN 40" },
+	{ 2, 4, 623,  "RN 25 + RN 40" },
+	{ 1, 4, 602,  "RN 25 + RN 40" },
+	{ 0, 2, 384,  "RN 3 + RP 7" },
+	{ 0, 3, 439,  "RN 3" },
+	{ 0, 4, 576,  "RN 3 + RN 25 + RN 40" },
+	// Rutas de las ciudades extra (5-9) hacia las iniciales
+	{ 5, 0, 278,  "RN 26" },
+	{ 5, 4, 260,  "RN 40" },
+	{ 6, 0, 148,  "RN 26" },
+	{ 6, 1, 290,  "RN 25" },
+	{ 7, 1, 17,   "RP 7" },
+	{ 7, 2, 28,   "RP 7" },
+	{ 8, 2, 165,  "RP 1" },
+	{ 8, 0, 270,  "RP 1" },
+	{ 9, 4, 70,   "RN 40" }
+};
+static const int CANT_CIUDADES_DEF = 10;
+static const int CANT_RUTAS_DEF    = 19;
+
+// Devuelve el indice actual (posicion en el array) de la ciudad con ese
+// id, o -1 si no esta cargada. El id es fijo; el indice puede cambiar al
+// dar de baja ciudades, por eso hay que resolverlo cada vez.
+static int indicePorId(grafo& g, int id) {
+	for (int i = 0; i < g.getCantCiudades(); i++)
+		if (g.getCiudad(i) && g.getCiudad(i)->get_id() == id) return i;
+	return -1;
+}
 
 //---------------------------------------------------------------------------
 void TForm1::escribirHistorial(string operacion) {
@@ -303,21 +336,19 @@ __fastcall TForm1::TForm1(TComponent* Owner) : TForm(Owner) {
 	mostrarCamino=false; longitudCamino=0;
 	for (int i=0;i<15;i++) caminoOptimo[i]=-1;
 
-	g.agregarCiudad(0,"Comodoro Rivadavia",700,390);
-	g.agregarCiudad(1,"Trelew",            380,200);
-	g.agregarCiudad(2,"Rawson",            660,110);
-	g.agregarCiudad(3,"Puerto Madryn",     370, 45);
-	g.agregarCiudad(4,"Esquel",             90,140);
+	// Cargar las ciudades iniciales (las marcadas como inicial) desde la tabla
+	for (int i = 0; i < CANT_CIUDADES_DEF; i++)
+		if (ciudadesDef[i].inicial)
+			g.agregarCiudad(ciudadesDef[i].id, ciudadesDef[i].nombre,
+							ciudadesDef[i].x, ciudadesDef[i].y);
 
-	g.agregarRuta(0,1,376,  "RN 3");
-	g.agregarRuta(1,2,22,   "RP 7");
-	g.agregarRuta(1,3,64.8, "RN 3");
-	g.agregarRuta(3,4,665,  "RN 3 + RN 25 + RN 40");
-	g.agregarRuta(2,4,623,  "RN 25 + RN 40");
-	g.agregarRuta(1,4,602,  "RN 25 + RN 40");
-	g.agregarRuta(0,2,384,  "RN 3 + RP 7");
-	g.agregarRuta(0,3,439,  "RN 3");
-	g.agregarRuta(0,4,576,  "RN 3 + RN 25 + RN 40");
+	// Cargar las rutas cuyas dos puntas ya existan (las de las iniciales)
+	for (int i = 0; i < CANT_RUTAS_DEF; i++) {
+		int a = indicePorId(g, rutasDef[i].idA);
+		int b = indicePorId(g, rutasDef[i].idB);
+		if (a != -1 && b != -1)
+			g.agregarRuta(a, b, rutasDef[i].distancia, rutasDef[i].descripcion);
+	}
 
 	actualizarCombos(); actualizarComboDisponibles();
 	actualizarComboBaja(); actualizarGrids();
@@ -352,9 +383,11 @@ void TForm1::actualizarCombos() {
 //---------------------------------------------------------------------------
 void TForm1::actualizarComboDisponibles() {
 	cboAgregar->Items->Clear();
-	for (int i=0;i<5;i++)
-		if (!g.existeCiudad(ciudadesExtra[i].id))
-			cboAgregar->Items->Add(ciudadesExtra[i].nombre.c_str());
+	// Mostrar TODAS las ciudades predefinidas que no esten cargadas,
+	// tanto las iniciales como las extra
+	for (int i = 0; i < CANT_CIUDADES_DEF; i++)
+		if (!g.existeCiudad(ciudadesDef[i].id))
+			cboAgregar->Items->Add(ciudadesDef[i].nombre.c_str());
 	if (cboAgregar->Items->Count>0) cboAgregar->ItemIndex=0;
 }
 
@@ -369,45 +402,23 @@ void TForm1::actualizarComboBaja() {
 }
 
 //---------------------------------------------------------------------------
-void TForm1::cargarRutasExtra(int idCiudadExtra) {
-	int idxNueva=-1;
-	for (int i=0;i<g.getCantCiudades();i++)
-		if (g.getCiudad(i)->get_id()==idCiudadExtra) { idxNueva=i; break; }
-	if (idxNueva==-1) return;
+void TForm1::cargarRutasExtra(int idCiudad) {
+	// Carga las rutas predefinidas que tocan a la ciudad recien agregada.
+	// Solo agrega una ruta si la otra punta tambien existe en ese momento.
+	// Sirve para cualquier ciudad predefinida, inicial o extra.
+	int idxNueva = indicePorId(g, idCiudad);
+	if (idxNueva == -1) return;
 
-	if (idCiudadExtra==5) {
-		for (int r=0;r<2;r++) {
-			int idxDest=-1;
-			for (int i=0;i<g.getCantCiudades();i++)
-				if (g.getCiudad(i)->get_id()==rutasRioMayo[r].destino) { idxDest=i; break; }
-			if (idxDest!=-1) g.agregarRuta(idxNueva,idxDest,rutasRioMayo[r].distancia,rutasRioMayo[r].descripcion);
-		}
-	} else if (idCiudadExtra==6) {
-		for (int r=0;r<2;r++) {
-			int idxDest=-1;
-			for (int i=0;i<g.getCantCiudades();i++)
-				if (g.getCiudad(i)->get_id()==rutasSarmiento[r].destino) { idxDest=i; break; }
-			if (idxDest!=-1) g.agregarRuta(idxNueva,idxDest,rutasSarmiento[r].distancia,rutasSarmiento[r].descripcion);
-		}
-	} else if (idCiudadExtra==7) {
-		for (int r=0;r<2;r++) {
-			int idxDest=-1;
-			for (int i=0;i<g.getCantCiudades();i++)
-				if (g.getCiudad(i)->get_id()==rutasGaiman[r].destino) { idxDest=i; break; }
-			if (idxDest!=-1) g.agregarRuta(idxNueva,idxDest,rutasGaiman[r].distancia,rutasGaiman[r].descripcion);
-		}
-	} else if (idCiudadExtra==8) {
-		for (int r=0;r<2;r++) {
-			int idxDest=-1;
-			for (int i=0;i<g.getCantCiudades();i++)
-				if (g.getCiudad(i)->get_id()==rutasCamarones[r].destino) { idxDest=i; break; }
-			if (idxDest!=-1) g.agregarRuta(idxNueva,idxDest,rutasCamarones[r].distancia,rutasCamarones[r].descripcion);
-		}
-	} else if (idCiudadExtra==9) {
-		int idxDest=-1;
-		for (int i=0;i<g.getCantCiudades();i++)
-			if (g.getCiudad(i)->get_id()==rutasLagoPuelo[0].destino) { idxDest=i; break; }
-		if (idxDest!=-1) g.agregarRuta(idxNueva,idxDest,rutasLagoPuelo[0].distancia,rutasLagoPuelo[0].descripcion);
+	for (int i = 0; i < CANT_RUTAS_DEF; i++) {
+		int otro = -1;
+		if (rutasDef[i].idA == idCiudad)      otro = rutasDef[i].idB;
+		else if (rutasDef[i].idB == idCiudad) otro = rutasDef[i].idA;
+		else continue;
+
+		int idxOtro = indicePorId(g, otro);
+		if (idxOtro != -1)
+			g.agregarRuta(idxNueva, idxOtro,
+						  rutasDef[i].distancia, rutasDef[i].descripcion);
 	}
 }
 
@@ -535,23 +546,27 @@ void __fastcall TForm1::btnCargarClick(TObject *Sender) {
 
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btnAgregarCiudadClick(TObject *Sender) {
-	if (cboAgregar->Items->Count==0) { memoResultados->Lines->Add("No hay mas ciudades disponibles."); return; }
-	int idxSel=cboAgregar->ItemIndex; if (idxSel<0) return;
-	int cnt=0,idExtra=-1;
-	for (int i=0;i<5;i++) {
-		if (!g.existeCiudad(ciudadesExtra[i].id)) {
-			if (cnt==idxSel) { idExtra=i; break; } cnt++;
+	if (cboAgregar->Items->Count == 0) { memoResultados->Lines->Add("No hay mas ciudades disponibles."); return; }
+	int idxSel = cboAgregar->ItemIndex; if (idxSel < 0) return;
+
+	// Buscar la N-esima ciudad faltante dentro de la tabla de predefinidas
+	int cnt = 0, idxDef = -1;
+	for (int i = 0; i < CANT_CIUDADES_DEF; i++) {
+		if (!g.existeCiudad(ciudadesDef[i].id)) {
+			if (cnt == idxSel) { idxDef = i; break; }
+			cnt++;
 		}
 	}
-	if (idExtra==-1) { memoResultados->Lines->Add("Error: ciudad no encontrada."); return; }
-	CiudadExtra& ce=ciudadesExtra[idExtra];
-	g.agregarCiudad(ce.id,ce.nombre,ce.x,ce.y);
-	cargarRutasExtra(ce.id);
-	mostrarCamino=false;
-	memoResultados->Lines->Add(("=== CIUDAD AGREGADA: "+ce.nombre+" ===").c_str());
+	if (idxDef == -1) { memoResultados->Lines->Add("Error: ciudad no encontrada."); return; }
+
+	CiudadDef& cd = ciudadesDef[idxDef];
+	g.agregarCiudad(cd.id, cd.nombre, cd.x, cd.y);
+	cargarRutasExtra(cd.id);
+	mostrarCamino = false;
+	memoResultados->Lines->Add(("=== CIUDAD AGREGADA: " + cd.nombre + " ===").c_str());
 	memoResultados->Lines->Add("Rutas predefinidas cargadas automaticamente.");
 	memoResultados->Lines->Add("---");
-	escribirHistorial("CIUDAD AGREGADA: "+ce.nombre);
+	escribirHistorial("CIUDAD AGREGADA: " + cd.nombre);
 	actualizarCombos(); actualizarComboDisponibles();
 	actualizarComboBaja(); actualizarGrids(); dibujarMapa();
 }
@@ -575,4 +590,5 @@ void __fastcall TForm1::btnBajaCiudadClick(TObject *Sender) {
 	actualizarComboBaja(); actualizarGrids(); dibujarMapa();
 }
 //---------------------------------------------------------------------------
+
 
